@@ -12,9 +12,9 @@ type Props = {
 
 export default function Background({
   totalTasks = 10,
-  completed = 2,
+  completed = 3,
   workStartHour = 9,
-  workDurationHours = 0.1,
+  workDurationHours = 8,
 }: Props) {
   const [timeProgress, setTimeProgress] = useState(0); // 0..1
 
