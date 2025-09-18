@@ -1,0 +1,44 @@
+/* Background.css */
+.bg-container {
+  width: 1000%;
+  max-width: 800px; /* 필요시 조정 */
+  padding: 40px;
+}
+
+.bg-bar {
+  position: relative;
+  width: 100%;
+  height: 128px; /* 배경 이미지 높이(128)와 맞춤 */
+  background-image: url("/backgrounds/bg-gray.png");
+  background-repeat: repeat-x;
+  background-size: 64px 128px; /* 배경 타일 크기: 64x128 */
+  image-rendering: pixelated;
+  overflow: hidden;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* 컬러 오버레이: 완료된 만큼 너비를 가짐 */
+.bg-color-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  background-image: url("/backgrounds/bg-color.png");
+  background-repeat: repeat-x;
+  background-size: 64px 128px;
+  image-rendering: pixelated;
+  transition: width 300ms linear;
+  pointer-events: none;
+}
+
+/* 캐릭터 위치 래퍼 */
+.character-wrapper {
+  position: absolute;
+  bottom: 10px; /* 바닥에서 올림(발이 자연스럽게 보이도록) */
+  width: 32px;
+  height: 28px;
+  transition: left 1s linear; /* 매초 위치 갱신 시 부드럽게 이동 */
+  pointer-events: none;
+}

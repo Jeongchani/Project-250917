@@ -1,0 +1,13 @@
+.character-sprite {
+  width: 32px;
+  height: 64px;
+  background: url("/sprites/character.png") 0 0 no-repeat;
+  image-rendering: pixelated;
+  /* 걷기 스프라이트: 4프레임, 전체 폭 128px (32x4) */
+  animation: walk 0.8s steps(4) infinite;
+}
+
+@keyframes walk {
+  from { background-position: 0 0; }
+  to   { background-position: -132px 0; }
+}
