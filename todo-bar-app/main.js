@@ -61,9 +61,10 @@ function createWindow() {
   if (isDev) {
     win.loadURL(rootUrl);
   } else {
-    win.loadURL(rootUrl);
+    win.loadFile(path.join(__dirname, "dist", "index.html")); // ✅ prod에서는 파일 로드
   }
 }
+
 
 // ---------- 앱 시작 ----------
 app.whenReady().then(async () => {
