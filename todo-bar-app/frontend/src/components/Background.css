@@ -73,7 +73,7 @@
 .home {
   position: absolute;
   right: 0;
-  bottom: 0;
+  bottom: -2px;
   width: 64px;
   height: 64px;
   background: url("/sprites/home.png") no-repeat center/contain;
@@ -84,7 +84,7 @@
 /* 캐릭터 위치 래퍼 */
 .character-wrapper {
   position: absolute;
-  bottom: 0;
+  bottom: 8px;
   width: 32px;
   height: 32px;
   transition: left 1s linear;
