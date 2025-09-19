@@ -71,7 +71,18 @@ ipcMain.on("close", (e) => {
 // ---------- 팝업 열기 ----------
 ipcMain.handle("open-settings", () => {
   if (!settingsWin || settingsWin.isDestroyed()) {
-    settingsWin = new BrowserWindow({ ...popupOpts });
+    settingsWin = new BrowserWindow({
+      width: 420,
+      height: 230,
+      resizable: false,        // 크기 조절 불가
+      frame: false,
+      alwaysOnTop: true,
+      webPreferences: {
+        preload: path.join(__dirname, "preload.js"),
+        contextIsolation: true,
+        nodeIntegration: false,
+      },
+    });
     settingsWin.on("closed", () => {
       settingsWin = null;
     });
@@ -87,6 +98,7 @@ ipcMain.handle("open-settings", () => {
     });
   }
 });
+
 
 ipcMain.handle("open-todos", () => {
   if (!todosWin || todosWin.isDestroyed()) {
