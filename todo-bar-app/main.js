@@ -5,9 +5,8 @@ let win;
 function createWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   win = new BrowserWindow({
-    width,
-    height: 80,
-    x: 0, y: height - 80,
+    width: 640,   // 10타일
+    height: 128,   // 타일 높이 그대로
     frame: false,
     alwaysOnTop: true,
     webPreferences: {

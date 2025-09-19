@@ -1,3 +1,4 @@
+// Background.tsx
 import { useEffect, useState } from "react";
 import "./Background.css";
 import Character from "./Character";
@@ -13,7 +14,7 @@ export default function Background({
   totalTasks = 10,
   completed = 2,
   workStartHour = 9,
-  workDurationHours = 8, // 기본 8시간
+  workDurationHours = 8,
 }: Props) {
   const [timeProgress, setTimeProgress] = useState(0);
 
@@ -31,14 +32,17 @@ export default function Background({
     return () => clearInterval(id);
   }, [workStartHour, workDurationHours]);
 
-  const taskFill = Math.min(1, Math.max(0, completed / Math.max(1, totalTasks)));
-  const leftPercent = Math.min(100, Math.max(0, timeProgress * 100));
-  const leftCalc = `calc(${leftPercent}% - 16px)`; // 16px = half 캐릭터 폭
+  const barWidth = 640;
+  const charWidth = 32;
+  const homeWidth = 64;
+  const leftPx = timeProgress * (barWidth - charWidth - homeWidth);
+  const leftCalc = `${leftPx}px`;
 
   return (
     <div className="bg-container">
       <div className="bg-bar">
-        <div className="bg-color-overlay" style={{ width: `${taskFill * 100}%` }} />
+        <div className="bg-color-overlay" style={{ width: `${(completed / totalTasks) * 100}%` }} />
+        <div className="home" />
         <div className="character-wrapper" style={{ left: leftCalc }}>
           <Character />
         </div>

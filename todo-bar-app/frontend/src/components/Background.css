@@ -1,20 +1,17 @@
 .bg-container {
-  width: 100%;
-  max-width: 800px;
-  padding: 8px;
+  width: 640px;
+  height: 128px;
 }
 
 .bg-bar {
   position: relative;
-  width: 100%;
+  width: 640px;
   height: 128px;
   background-image: url("/backgrounds/bg-gray.png");
   background-repeat: repeat-x;
   background-size: 128px 128px;
   image-rendering: pixelated;
   overflow: hidden;
-  border-radius: 5px;
-  box-sizing: border-box;
 }
 
 .bg-color-overlay {
@@ -31,11 +28,21 @@
   pointer-events: none;
 }
 
+
+.home {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 64px;
+  height: 64px;
+  background: url("/sprites/home.png") no-repeat center/contain;
+  image-rendering: pixelated;
+}
+
 .character-wrapper {
   position: absolute;
-  bottom: 8px;
-  width: 33px;
+  bottom: 0;
+  width: 32px;
   height: 32px;
   transition: left 1s linear;
-  pointer-events: none;
 }
