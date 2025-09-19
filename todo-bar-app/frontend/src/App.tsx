@@ -1,8 +1,6 @@
-
 import Background from "./components/Background";
 
 function App() {
-
-  return <Background totalTasks={10} completed={5} workStartHour={9} workDurationHours={5} />;
+  return <Background />;   // props 제거
 }
 export default App;
