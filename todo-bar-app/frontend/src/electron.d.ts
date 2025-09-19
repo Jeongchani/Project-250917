@@ -1,12 +1,17 @@
-export type BarPosition = "top" | "bottom";
-type Settings = { startHour: number; endHour: number };
-type Todo = { id: number; title: string; done: boolean; due?: string };
+export type Settings = {
+  startHour: number;
+  startMinute: number;
+  endHour: number;
+  endMinute: number;
+};
+export type Todo = { id: number; title: string; done: boolean; due?: string };
 
 declare global {
   interface Window {
     electronAPI: {
       minimize: () => void;
       close: () => void;
+
       openSettings: () => Promise<void>;
       openTodos: () => Promise<void>;
 
@@ -18,8 +23,9 @@ declare global {
       toggleTodo: (id: number) => Promise<void>;
       deleteTodo: (id: number) => Promise<void>;
 
-      onStateUpdated: (cb: (p:{settings:Settings; todos:Todo[]}) => void) => () => void;
-      setBarPosition: (pos: BarPosition) => Promise<void>;
+      onStateUpdated: (
+        cb: (p: { settings: Settings; todos: Todo[] }) => void
+      ) => () => void;
     };
   }
 }

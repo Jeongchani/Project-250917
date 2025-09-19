@@ -12,7 +12,7 @@
   background: url("/sprites/character.png") 0 0 no-repeat;
   image-rendering: pixelated;
   /* 부드러운 점프 */
-  animation: walk 0.9xs steps(var(--frames)) infinite;
+  animation: walk 0.9s steps(var(--frames)) infinite;
   will-change: background-position;
 }
 
