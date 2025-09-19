@@ -1,4 +1,3 @@
-// Background.tsx
 import { useEffect, useState } from "react";
 import "./Background.css";
 import Character from "./Character";
@@ -40,6 +39,19 @@ export default function Background({
 
   return (
     <div className="bg-container">
+      {/* 상단 타이틀바 */}
+      <div className="titlebar" data-tauri-drag-region>
+        <div className="left-controls">
+          <button className="icon-btn">＋</button>
+          <button className="icon-btn">⚙</button>
+        </div>
+        <div className="right-controls">
+          <button onClick={() => window.electronAPI.minimize()}>–</button>
+          <button onClick={() => window.electronAPI.close()}>×</button>
+        </div>
+      </div>
+
+      {/* 본체 */}
       <div className="bg-bar">
         <div className="bg-color-overlay" style={{ width: `${(completed / totalTasks) * 100}%` }} />
         <div className="home" />
