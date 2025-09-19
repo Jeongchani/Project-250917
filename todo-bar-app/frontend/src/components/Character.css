@@ -2,17 +2,17 @@
 /* 필요값: 프레임 크기, 프레임 수, 프레임 사이 간격(px) */
 .character-sprite {
   /* === 설정값 === */
-  --fw: 32px;      /* frame width  */
+  --fw: 33px;      /* frame width  */
   --fh: 32px;      /* frame height */
   --frames: 4;     /* frame count  */
-  --gap: 1px;      /* padding between frames (없으면 0px) */
+  --gap: 0px;      /* padding between frames (없으면 0px) */
 
   width: var(--fw);
   height: var(--fh);
   background: url("/sprites/character.png") 0 0 no-repeat;
   image-rendering: pixelated;
   /* 부드러운 점프 */
-  animation: walk 1s steps(var(--frames)) infinite;
+  animation: walk 0.9xs steps(var(--frames)) infinite;
   will-change: background-position;
 }
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./Popup.css";
+import "./SettingsPopup.css";
 
 export default function SettingsPopup() {
   const [start, setStart] = useState(9);
@@ -20,8 +20,9 @@ export default function SettingsPopup() {
   };
 
   return (
-    <div className="popup-container">
-      <div className="popup-titlebar">
+    <div className="settings-container">
+      {/* 타이틀바 */}
+      <div className="settings-titlebar">
         <div className="title">근무 시간 설정</div>
         <div className="right">
           <button className="tbtn" onClick={() => window.electronAPI.minimize()}>–</button>
@@ -29,16 +30,32 @@ export default function SettingsPopup() {
         </div>
       </div>
 
-      <div className="popup-body">
-        <label>출근 시간(0~23)
-          <input type="number" min={0} max={23} value={start} onChange={e=>setStart(+e.target.value)} />
+      {/* 본문 */}
+      <div className="settings-body">
+        <label>
+          출근 시간(0~23)
+          <input
+            type="number"
+            min={0}
+            max={23}
+            value={start}
+            onChange={e => setStart(+e.target.value)}
+          />
         </label>
-        <label>퇴근 시간(0~23)
-          <input type="number" min={0} max={23} value={end} onChange={e=>setEnd(+e.target.value)} />
+        <label>
+          퇴근 시간(0~23)
+          <input
+            type="number"
+            min={0}
+            max={23}
+            value={end}
+            onChange={e => setEnd(+e.target.value)}
+          />
         </label>
       </div>
 
-      <div className="popup-footer">
+      {/* 푸터 */}
+      <div className="settings-footer">
         <button className="ghost" onClick={cancel}>취소</button>
         <button className="primary" onClick={save}>완료</button>
       </div>

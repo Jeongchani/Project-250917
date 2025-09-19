@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import "./Popup.css";
+import "./TodosPopup.css";
 
-type Todo = { id:number; title:string; done:boolean; due?:string };
+type Todo = { id: number; title: string; done: boolean; due?: string };
 
 export default function TodosPopup() {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [title, setTitle] = useState('');
-  const [due, setDue] = useState<string>('');
+  const [title, setTitle] = useState("");
+  const [due, setDue] = useState<string>("");
 
   useEffect(() => {
     (async () => { setTodos(await window.electronAPI.getTodos()); })();
@@ -18,12 +18,13 @@ export default function TodosPopup() {
     const t = title.trim();
     if (!t) return;
     await window.electronAPI.addTodo({ title: t, due: due || undefined });
-    setTitle(''); setDue('');
+    setTitle(""); setDue("");
   };
 
   return (
-    <div className="popup-container">
-      <div className="popup-titlebar">
+    <div className="todos-container">
+      {/* 타이틀바 */}
+      <div className="todos-titlebar">
         <div className="title">일정 추가/완료</div>
         <div className="right">
           <button className="tbtn" onClick={() => window.electronAPI.minimize()}>–</button>
@@ -31,10 +32,19 @@ export default function TodosPopup() {
         </div>
       </div>
 
-      <div className="popup-body">
+      {/* 본문 */}
+      <div className="todos-body">
         <div className="row">
-          <input placeholder="할 일 제목" value={title} onChange={e=>setTitle(e.target.value)} />
-          <input type="time" value={due} onChange={e=>setDue(e.target.value)} />
+          <input
+            placeholder="할 일 제목"
+            value={title}
+            onChange={e => setTitle(e.target.value)}
+          />
+          <input
+            type="time"
+            value={due}
+            onChange={e => setDue(e.target.value)}
+          />
           <button className="primary" onClick={add}>추가</button>
         </div>
 
@@ -42,22 +52,33 @@ export default function TodosPopup() {
           {todos.map(t => (
             <li key={t.id}>
               <label>
-                <input type="checkbox" checked={t.done} onChange={() => window.electronAPI.toggleTodo(t.id)} />
-                <span className={t.done ? 'done' : ''}>{t.title}</span>
+                <input
+                  type="checkbox"
+                  checked={t.done}
+                  onChange={() => window.electronAPI.toggleTodo(t.id)}
+                />
+                <span className={t.done ? "done" : ""}>{t.title}</span>
                 {t.due ? <small className="due">{t.due}</small> : null}
               </label>
-              <button className="ghost" onClick={() => window.electronAPI.deleteTodo(t.id)}>삭제</button>
+              <button
+                className="ghost"
+                onClick={() => window.electronAPI.deleteTodo(t.id)}
+              >
+                삭제
+              </button>
             </li>
           ))}
         </ul>
       </div>
 
-      <div className="popup-footer">
-        <span/>
-        <span style={{opacity:.7, fontSize:12}}>
-          완료: {todos.filter(t=>t.done).length} / 총 {todos.length || 0}
+      {/* 푸터 */}
+      <div className="todos-footer">
+        <span />
+        <span style={{ opacity: 0.7, fontSize: 12 }}>
+          완료: {todos.filter(t => t.done).length} / 총 {todos.length}
         </span>
       </div>
     </div>
   );
 }
+
