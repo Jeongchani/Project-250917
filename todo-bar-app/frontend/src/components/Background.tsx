@@ -1,22 +1,21 @@
-// Background.tsx
 import { useEffect, useState } from "react";
 import "./Background.css";
 import Character from "./Character";
 
 type Props = {
-  totalTasks?: number;      // 기본 10
-  completed?: number;       // 기본 2
-  workStartHour?: number;   // 기본 9 (변경 가능)
-  workDurationHours?: number; // 기본 8
+  totalTasks?: number;
+  completed?: number;
+  workStartHour?: number;
+  workDurationHours?: number;
 };
 
 export default function Background({
   totalTasks = 10,
-  completed = 3,
+  completed = 2,
   workStartHour = 9,
-  workDurationHours = 8,
+  workDurationHours = 8, // 기본 8시간
 }: Props) {
-  const [timeProgress, setTimeProgress] = useState(0); // 0..1
+  const [timeProgress, setTimeProgress] = useState(0);
 
   useEffect(() => {
     function updateProgress() {
@@ -28,12 +27,13 @@ export default function Background({
       setTimeProgress(p);
     }
     updateProgress();
-    const id = setInterval(updateProgress, 1000); // 1초마다 갱신(부드러운 이동)
+    const id = setInterval(updateProgress, 1000);
     return () => clearInterval(id);
   }, [workStartHour, workDurationHours]);
 
   const taskFill = Math.min(1, Math.max(0, completed / Math.max(1, totalTasks)));
-  const leftCalc = `calc(${timeProgress * 100}% - 16px)`; // 캐릭터 폭 32px → 가운데 보정
+  const leftPercent = Math.min(100, Math.max(0, timeProgress * 100));
+  const leftCalc = `calc(${leftPercent}% - 16px)`; // 16px = half 캐릭터 폭
 
   return (
     <div className="bg-container">

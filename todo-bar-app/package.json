@@ -1,18 +1,17 @@
 {
   "name": "todo-bar-app",
   "version": "1.0.0",
-  "description": "",
   "main": "main.js",
   "scripts": {
-  "dev": "concurrently \"npm run dev --prefix frontend\" \"npm run electron\"",
-  "electron": "electron ."
+    "dev:renderer": "cd frontend && npm run dev",
+    "dev:electron": "cross-env NODE_ENV=development ELECTRON_DEV=true wait-on http://localhost:5173 && electron .",
+    "dev": "concurrently -k \"npm:dev:renderer\" \"npm:dev:electron\""
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
-    "electron": "^38.1.1"
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "electron": "^26.6.10",
+    "electron-builder": "^24.13.3",
+    "wait-on": "^7.2.0"
   }
-
-  
 }
