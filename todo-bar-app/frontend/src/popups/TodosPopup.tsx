@@ -3,14 +3,29 @@ import "./TodosPopup.css";
 
 type Todo = { id: number; title: string; done: boolean; due?: string };
 
+// 클라이언트에서도 정렬 함수 한 번 더
+function sortTodos(list: Todo[]): Todo[] {
+  const withDue = list.filter(t => t.due);
+  const withoutDue = list.filter(t => !t.due);
+
+  withDue.sort((a, b) => a.due!.localeCompare(b.due!));
+
+  return [...withDue, ...withoutDue];
+}
+
 export default function TodosPopup() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [title, setTitle] = useState("");
   const [due, setDue] = useState<string>("");
 
   useEffect(() => {
-    (async () => { setTodos(await window.electronAPI.getTodos()); })();
-    const off = window.electronAPI.onStateUpdated(({ todos }) => setTodos(todos));
+    (async () => { 
+      const raw = await window.electronAPI.getTodos();
+      setTodos(sortTodos(raw));
+    })();
+    const off = window.electronAPI.onStateUpdated(({ todos }) => 
+      setTodos(sortTodos(todos))
+    );
     return off;
   }, []);
 

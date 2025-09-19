@@ -1,9 +1,20 @@
-const { app, BrowserWindow, ipcMain, screen } = require("electron");
+const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 
 let win;
 let settingsWin = null;
 let todosWin = null;
+
+// electron-store는 ESM 전용 → 동적 import 사용
+let Store;
+let store;
+
+async function initStore() {
+  if (!Store) {
+    Store = (await import("electron-store")).default;
+    store = new Store();
+  }
+}
 
 // ---------- 공유 상태 ----------
 let settings = {
@@ -12,8 +23,9 @@ let settings = {
   endHour: 18,
   endMinute: 0,
 };
-let todos = []; // {id,title,done,due?}
+let todos = [];
 
+// ---------- 창 생성 ----------
 const isDev = process.env.ELECTRON_DEV === "true" || !app.isPackaged;
 const rootUrl = isDev
   ? "http://localhost:5173"
@@ -53,7 +65,17 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(createWindow);
+// ---------- 앱 시작 ----------
+app.whenReady().then(async () => {
+  await initStore();
+
+  // 저장된 값 불러오기
+  settings = store.get("settings", settings);
+  todos = store.get("todos", []);
+
+  createWindow();
+});
+
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
@@ -74,7 +96,7 @@ ipcMain.handle("open-settings", () => {
     settingsWin = new BrowserWindow({
       width: 420,
       height: 230,
-      resizable: false,        // 크기 조절 불가
+      resizable: false,
       frame: false,
       alwaysOnTop: true,
       webPreferences: {
@@ -98,7 +120,6 @@ ipcMain.handle("open-settings", () => {
     });
   }
 });
-
 
 ipcMain.handle("open-todos", () => {
   if (!todosWin || todosWin.isDestroyed()) {
@@ -133,31 +154,50 @@ ipcMain.handle("save-settings", (e, next) => {
     : 0;
 
   settings = { startHour: sH, startMinute: sM, endHour: eH, endMinute: eM };
+  store.set("settings", settings); // 저장
   broadcastState();
 });
 
-ipcMain.handle("get-todos", () => todos);
+ipcMain.handle("get-todos", () => sortTodos(todos));
+
 ipcMain.handle("add-todo", (e, item) => {
   const id = Date.now();
   const title = String(item?.title || "").trim();
   const due = item?.due ? String(item.due) : undefined;
   if (!title) return;
   todos.push({ id, title, done: false, due });
+  todos = sortTodos(todos);
+  store.set("todos", todos); // 저장
   broadcastState();
 });
+
 ipcMain.handle("toggle-todo", (e, id) => {
   todos = todos.map((x) =>
     x.id === id ? { ...x, done: !x.done } : x
   );
-  broadcastState();
-});
-ipcMain.handle("delete-todo", (e, id) => {
-  todos = todos.filter((x) => x.id !== id);
+  todos = sortTodos(todos);
+  store.set("todos", todos);
   broadcastState();
 });
 
+ipcMain.handle("delete-todo", (e, id) => {
+  todos = todos.filter((x) => x.id !== id);
+  todos = sortTodos(todos);
+  store.set("todos", todos);
+  broadcastState();
+});
+
+// ---------- 정렬 함수 ----------
+function sortTodos(list) {
+  const withDue = list.filter((t) => t.due);
+  const withoutDue = list.filter((t) => !t.due);
+
+  withDue.sort((a, b) => a.due.localeCompare(b.due));
+  return [...withDue, ...withoutDue];
+}
+
 function broadcastState() {
-  const payload = { settings, todos };
+  const payload = { settings, todos: sortTodos(todos) };
   if (win && !win.isDestroyed()) win.webContents.send("state-updated", payload);
   if (settingsWin && !settingsWin.isDestroyed())
     settingsWin.webContents.send("state-updated", payload);
