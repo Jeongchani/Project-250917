@@ -234,3 +234,27 @@ function broadcastState() {
   if (todosWin && !todosWin.isDestroyed())
     todosWin.webContents.send("state-updated", payload);
 }
+
+// ---------- 업데이트 ----------
+
+const { autoUpdater } = require("electron-updater");
+
+// 앱 시작 시 업데이트 확인
+app.whenReady().then(() => {
+  autoUpdater.checkForUpdatesAndNotify();
+});
+
+// 로그 찍기 (선택)
+autoUpdater.on("checking-for-update", () => {
+  console.log("업데이트 확인 중...");
+});
+autoUpdater.on("update-available", () => {
+  console.log("새 업데이트 있음. 다운로드 시작...");
+});
+autoUpdater.on("update-not-available", () => {
+  console.log("최신 버전입니다.");
+});
+autoUpdater.on("update-downloaded", () => {
+  console.log("업데이트 다운로드 완료. 재시작 시 적용됩니다.");
+  autoUpdater.quitAndInstall();
+});
