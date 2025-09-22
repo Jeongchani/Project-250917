@@ -5,15 +5,16 @@
   "author": "Your Name",
   "main": "main.js",
   "scripts": {
-    "dev:renderer": "cd frontend && npm run dev",
-    "dev:electron": "cross-env NODE_ENV=development ELECTRON_DEV=true wait-on http://localhost:5173 && electron .",
-    "dev": "concurrently -k \"npm:dev:renderer\" \"npm:dev:electron\"",
-    "build:renderer": "cd frontend && npm run build",
-    "build:electron": "electron-builder",
-    "clean": "rimraf dist",
-    "build": "npm run build:renderer && npm run clean && npm run build:electron",
-    "release": "npm run build" 
-  },
+  "dev:renderer": "cd frontend && npm run dev",
+  "dev:electron": "cross-env NODE_ENV=development ELECTRON_DEV=true wait-on http://localhost:5173 && electron .",
+  "dev": "concurrently -k \"npm:dev:renderer\" \"npm:dev:electron\"",
+  "build:renderer": "cd frontend && npm run build",
+  "build:electron": "electron-builder",
+  "clean": "rimraf dist",
+  "build": "npm run build:renderer && npm run clean && npm run build:electron",
+  "release": "npm run build:renderer && npm run clean && electron-builder --publish always"
+}
+,
   "build": {
     "appId": "com.example.todo-bar-app",
     "productName": "TodoBarApp",
@@ -35,7 +36,7 @@
       {
         "provider": "github",
         "owner": "Jeongchani",
-        "repo": "https://github.com/Jeongchani/Project-250917.git"
+        "repo": "Project-250917"
       }
     ]
   },
