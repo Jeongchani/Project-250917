@@ -1,19 +1,26 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
+const fs = require("fs");
 
+// ---------- 로그 ----------
+const logPath = path.join(app.getPath("userData"), "app.log");
+function log(msg) {
+  const line = `[${new Date().toISOString()}] ${msg}\n`;
+  fs.appendFileSync(logPath, line);
+  console.log(line);
+}
+
+// ---------- 전역 변수 ----------
 let win;
 let settingsWin = null;
 let todosWin = null;
 
-// electron-store는 ESM 전용 → 동적 import 사용
-let Store;
+// ---------- electron-store ----------
+const Store = require("electron-store");   // ✅ require 방식
 let store;
 
-async function initStore() {
-  if (!Store) {
-    Store = (await import("electron-store")).default;
-    store = new Store();
-  }
+function initStore() {
+  store = new Store();
 }
 
 // ---------- 공유 상태 ----------
@@ -29,7 +36,7 @@ let todos = [];
 const isDev = process.env.ELECTRON_DEV === "true" || !app.isPackaged;
 const rootUrl = isDev
   ? "http://localhost:5173"
-  : `file://${path.join(__dirname, "dist", "index.html")}`;
+  : `file://${path.join(__dirname, "frontend", "dist", "index.html")}`;
 
 const popupOpts = {
   width: 420,
@@ -45,40 +52,62 @@ const popupOpts = {
 };
 
 function createWindow() {
-  win = new BrowserWindow({
-    width: 640,
-    height: 152,
-    resizable: false,
-    frame: false,
-    alwaysOnTop: true,
-    webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
-      contextIsolation: true,
-      nodeIntegration: false,
-    },
-  });
+  try {
+    log("메인 윈도우 생성 시작");
+    win = new BrowserWindow({
+      width: 640,
+      height: 152,
+      resizable: false,
+      frame: false,
+      alwaysOnTop: true,
+      webPreferences: {
+        preload: path.join(__dirname, "preload.js"),
+        contextIsolation: true,
+        nodeIntegration: false,
+      },
+    });
 
-  if (isDev) {
-    win.loadURL(rootUrl);
-  } else {
-    win.loadFile(path.join(__dirname, "dist", "index.html")); // ✅ prod에서는 파일 로드
+    if (isDev) {
+      log("DEV 모드 → " + rootUrl);
+      win.loadURL(rootUrl);
+    } else {
+      log("PROD 모드 → frontend/dist/index.html 로드 시도");
+      win.loadFile(path.join(__dirname, "frontend", "dist", "index.html"));
+    }
+
+    win.webContents.openDevTools();
+
+    win.on("closed", () => {
+      log("메인 윈도우 닫힘");
+      win = null;
+    });
+  } catch (err) {
+    log("createWindow 에러: " + err.stack);
   }
 }
 
-
 // ---------- 앱 시작 ----------
-app.whenReady().then(async () => {
-  await initStore();
+app.whenReady().then(() => {
+  try {
+    log("앱 시작");
+    initStore();
+    log("스토어 초기화 완료");
 
-  // 저장된 값 불러오기
-  settings = store.get("settings", settings);
-  todos = store.get("todos", []);
+    // 저장된 값 불러오기
+    settings = store.get("settings", settings);
+    todos = store.get("todos", []);
 
-  createWindow();
+    createWindow();
+  } catch (err) {
+    log("app.whenReady 에러: " + err.stack);
+  }
 });
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") app.quit();
+  if (process.platform !== "darwin") {
+    log("모든 창 닫힘 → 앱 종료");
+    app.quit();
+  }
 });
 
 // ---------- 창 제어 ----------
@@ -116,7 +145,7 @@ ipcMain.handle("open-settings", () => {
   if (isDev) {
     settingsWin.loadURL(`${rootUrl}?window=settings`);
   } else {
-    settingsWin.loadFile(path.join(__dirname, "dist", "index.html"), {
+    settingsWin.loadFile(path.join(__dirname, "frontend", "dist", "index.html"), {
       query: { window: "settings" },
     });
   }
@@ -135,7 +164,7 @@ ipcMain.handle("open-todos", () => {
   if (isDev) {
     todosWin.loadURL(`${rootUrl}?window=todos`);
   } else {
-    todosWin.loadFile(path.join(__dirname, "dist", "index.html"), {
+    todosWin.loadFile(path.join(__dirname, "frontend", "dist", "index.html"), {
       query: { window: "todos" },
     });
   }
@@ -155,7 +184,7 @@ ipcMain.handle("save-settings", (e, next) => {
     : 0;
 
   settings = { startHour: sH, startMinute: sM, endHour: eH, endMinute: eM };
-  store.set("settings", settings); // 저장
+  store.set("settings", settings);
   broadcastState();
 });
 
@@ -168,7 +197,7 @@ ipcMain.handle("add-todo", (e, item) => {
   if (!title) return;
   todos.push({ id, title, done: false, due });
   todos = sortTodos(todos);
-  store.set("todos", todos); // 저장
+  store.set("todos", todos);
   broadcastState();
 });
 
@@ -188,7 +217,7 @@ ipcMain.handle("delete-todo", (e, id) => {
   broadcastState();
 });
 
-// ---------- 정렬 함수 ----------
+// ---------- 유틸 ----------
 function sortTodos(list) {
   const withDue = list.filter((t) => t.due);
   const withoutDue = list.filter((t) => !t.due);

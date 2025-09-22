@@ -1,6 +1,8 @@
 {
   "name": "todo-bar-app",
   "version": "1.0.0",
+  "description": "A simple todo bar Electron app",
+  "author": "Your Name",
   "main": "main.js",
   "scripts": {
     "dev:renderer": "cd frontend && npm run dev",
@@ -8,31 +10,36 @@
     "dev": "concurrently -k \"npm:dev:renderer\" \"npm:dev:electron\"",
     "build:renderer": "cd frontend && npm run build",
     "build:electron": "electron-builder",
-    "build": "npm run build:renderer && npm run build:electron"
+    "clean": "rimraf dist",
+    "build": "npm run build:renderer && npm run clean && npm run build:electron"
   },
   "build": {
-  "appId": "com.example.todo-bar-app",
-  "productName": "TodoBarApp",
-  "directories": {
-    "buildResources": "build"
+    "appId": "com.example.todo-bar-app",
+    "productName": "TodoBarApp",
+    "directories": {
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "frontend/dist/**/*",
+      "main.js",
+      "preload.js",
+      "package.json",
+      "node_modules/electron-store/**/*"
+    ],
+    "win": {
+      "target": "nsis"
+    }
   },
-  "files": [
-    "dist/**/*",
-    "main.js",
-    "preload.js",
-    "package.json"
-  ],
-  "win": {
-    "target": "nsis",
-    "sign": false  
-  }
-},
   "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cross-env": "^10.0.0",
     "electron": "^26.6.10",
     "electron-builder": "^24.13.3",
-    "concurrently": "^8.2.2",
+    "rimraf": "^5.0.10",
     "wait-on": "^7.2.0"
+  },
+  "dependencies": {
+    "electron-store": "^8.2.0"
   }
 }
-
-
