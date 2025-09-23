@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
 const fs = require("fs");
+const { autoUpdater } = require("electron-updater");
 
 // ---------- 로그 ----------
 const logPath = path.join(app.getPath("userData"), "app.log");
@@ -16,20 +17,14 @@ let settingsWin = null;
 let todosWin = null;
 
 // ---------- electron-store ----------
-const Store = require("electron-store");   // ✅ require 방식
+const Store = require("electron-store");
 let store;
-
 function initStore() {
   store = new Store();
 }
 
 // ---------- 공유 상태 ----------
-let settings = {
-  startHour: 9,
-  startMinute: 0,
-  endHour: 18,
-  endMinute: 0,
-};
+let settings = { startHour: 9, startMinute: 0, endHour: 18, endMinute: 0 };
 let todos = [];
 
 // ---------- 창 생성 ----------
@@ -75,8 +70,6 @@ function createWindow() {
       win.loadFile(path.join(__dirname, "frontend", "dist", "index.html"));
     }
 
-    win.webContents.openDevTools();
-
     win.on("closed", () => {
       log("메인 윈도우 닫힘");
       win = null;
@@ -90,6 +83,8 @@ function createWindow() {
 app.whenReady().then(() => {
   try {
     log("앱 시작");
+
+    // 스토어 초기화
     initStore();
     log("스토어 초기화 완료");
 
@@ -97,7 +92,12 @@ app.whenReady().then(() => {
     settings = store.get("settings", settings);
     todos = store.get("todos", []);
 
+    // 메인 윈도우 생성
     createWindow();
+
+    // 업데이트 확인 (여기서만 호출)
+    log("업데이트 확인 시작");
+    autoUpdater.checkForUpdatesAndNotify();
   } catch (err) {
     log("app.whenReady 에러: " + err.stack);
   }
@@ -175,13 +175,9 @@ ipcMain.handle("get-settings", () => settings);
 
 ipcMain.handle("save-settings", (e, next) => {
   const sH = Math.max(0, Math.min(23, Number(next.startHour)));
-  const sM = [0, 30].includes(Number(next.startMinute))
-    ? Number(next.startMinute)
-    : 0;
+  const sM = [0, 30].includes(Number(next.startMinute)) ? Number(next.startMinute) : 0;
   const eH = Math.max(0, Math.min(23, Number(next.endHour)));
-  const eM = [0, 30].includes(Number(next.endMinute))
-    ? Number(next.endMinute)
-    : 0;
+  const eM = [0, 30].includes(Number(next.endMinute)) ? Number(next.endMinute) : 0;
 
   settings = { startHour: sH, startMinute: sM, endHour: eH, endMinute: eM };
   store.set("settings", settings);
@@ -202,9 +198,7 @@ ipcMain.handle("add-todo", (e, item) => {
 });
 
 ipcMain.handle("toggle-todo", (e, id) => {
-  todos = todos.map((x) =>
-    x.id === id ? { ...x, done: !x.done } : x
-  );
+  todos = todos.map((x) => (x.id === id ? { ...x, done: !x.done } : x));
   todos = sortTodos(todos);
   store.set("todos", todos);
   broadcastState();
@@ -235,26 +229,13 @@ function broadcastState() {
     todosWin.webContents.send("state-updated", payload);
 }
 
-// ---------- 업데이트 ----------
-
-const { autoUpdater } = require("electron-updater");
-
-// 앱 시작 시 업데이트 확인
-app.whenReady().then(() => {
-  autoUpdater.checkForUpdatesAndNotify();
-});
-
-// 로그 찍기 (선택)
-autoUpdater.on("checking-for-update", () => {
-  console.log("업데이트 확인 중...");
-});
-autoUpdater.on("update-available", () => {
-  console.log("새 업데이트 있음. 다운로드 시작...");
-});
-autoUpdater.on("update-not-available", () => {
-  console.log("최신 버전입니다.");
-});
+// ---------- 업데이트 이벤트 ----------
+autoUpdater.on("checking-for-update", () => log("업데이트 확인 중..."));
+autoUpdater.on("update-available", () => log("새 업데이트 있음. 다운로드 시작..."));
+autoUpdater.on("update-not-available", () => log("최신 버전입니다."));
+autoUpdater.on("error", (err) => log("업데이트 에러: " + err.toString()));
 autoUpdater.on("update-downloaded", () => {
-  console.log("업데이트 다운로드 완료. 재시작 시 적용됩니다.");
+  log("업데이트 다운로드 완료. 재시작 시 적용됩니다.");
   autoUpdater.quitAndInstall();
 });
+
