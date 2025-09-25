@@ -1,0 +1,24 @@
+# deps
+node_modules/
+
+# logs
+logs
+*.log
+
+# renderer build
+frontend/dist/
+
+# electron-builder outputs
+release/
+
+# caches
+.cache/
+.vite/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# env
+.env
+.env.local

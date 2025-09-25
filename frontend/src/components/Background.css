@@ -1,0 +1,92 @@
+/* 바 전체 컨테이너 (640×128 본체 + 24 타이틀바 = 152) */
+.bg-container {
+  position: relative;
+  width: 640px;
+  height: 152px; /* 본체 128 + 타이틀바 24 */
+  color: #fff;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+/* 상단 얇은 타이틀바: 드래그해서 창 이동 */
+.titlebar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 24px;
+  background: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 6px;
+  -webkit-app-region: drag;   /* 드래그 영역 */
+  z-index: 10;
+}
+.titlebar button {
+  -webkit-app-region: no-drag; /* 버튼 클릭 가능 */
+  width: 24px;
+  height: 20px;
+  border: none;
+  background: #555;
+  color: #fff;
+  font-size: 12px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  cursor: pointer;
+  outline: none;
+}
+.titlebar button:hover { background: #777; }
+.left-controls, .right-controls { display: flex; gap: 4px; }
+
+/* 본체 배경 영역 (타이틀바 밑으로 24px 내려감) */
+.bg-bar {
+  position: absolute;
+  top: 24px;               /* 타이틀바 바로 아래 */
+  left: 0;
+  width: 640px;
+  height: 128px;           /* 본체 높이는 그대로 128 */
+  background-image: url("/backgrounds/bg-gray.png");
+  background-repeat: repeat-x;
+  background-size: 128px 128px;
+  image-rendering: pixelated;
+  overflow: hidden;
+}
+
+/* 완료율 컬러 오버레이 */
+.bg-color-overlay {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0%;
+  background-image: url("/backgrounds/bg-color.png");
+  background-repeat: repeat-x;
+  background-size: 128px 128px;
+  image-rendering: pixelated;
+  transition: width 300ms linear;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 오른쪽 끝 집 아이콘 */
+.home {
+  position: absolute;
+  right: 0;
+  bottom: -2px;
+  width: 64px;
+  height: 64px;
+  background: url("/sprites/home.png") no-repeat center/contain;
+  image-rendering: pixelated;
+  z-index: 1;
+}
+
+/* 캐릭터 위치 래퍼 */
+.character-wrapper {
+  position: absolute;
+  bottom: 8px;
+  width: 32px;
+  height: 32px;
+  transition: left 1s linear;
+  z-index: 2;
+}

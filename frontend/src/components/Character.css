@@ -1,0 +1,29 @@
+/* Character.css */
+/* 필요값: 프레임 크기, 프레임 수, 프레임 사이 간격(px) */
+.character-sprite {
+  /* === 설정값 === */
+  --fw: 33px;      /* frame width  */
+  --fh: 32px;      /* frame height */
+  --frames: 4;     /* frame count  */
+  --gap: 0px;      /* padding between frames (없으면 0px) */
+
+  width: var(--fw);
+  height: var(--fh);
+  background: url("/sprites/character.png") 0 0 no-repeat;
+  image-rendering: pixelated;
+  /* 부드러운 점프 */
+  animation: walk 0.9s steps(var(--frames)) infinite;
+  will-change: background-position;
+}
+
+/* 총 이동폭 = (fw*frames) + (gap*(frames-1)) */
+@keyframes walk {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position:
+      calc(-1 * ((var(--fw) * var(--frames)) + (var(--gap) * (var(--frames) - 1))))
+      0;
+  }
+}

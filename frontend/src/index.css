@@ -1,0 +1,12 @@
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  height: 100%; /* 수정: min-height 말고 height 100% */
+}
+#root {
+  height: 100%;
+  width: 100%;
+}
