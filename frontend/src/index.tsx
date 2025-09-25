@@ -11,7 +11,7 @@ const w = params.get('window');
 const root = createRoot(document.getElementById('root')!);
 root.render(
   <StrictMode>
-    { w === 'settings' ? <TimePopup /> :
+    { w === 'times' ? <TimePopup /> :
       w === 'todos' ? <TodosPopup /> :
       <App /> }
   </StrictMode>

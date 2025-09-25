@@ -21,7 +21,6 @@ function handleTime() {
     return true;
   });
 
-  // ✅ 원본: "open-time"
   ipcMain.handle("open-time", async () => {
     openTimePopup();
     return true;

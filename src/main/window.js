@@ -2,7 +2,7 @@ const { app, BrowserWindow } = require("electron");
 const path = require("path");
 
 let mainWin = null;
-let settingsWin = null;
+let timeWin = null;
 let todosWin = null;
 
 
@@ -44,8 +44,8 @@ function getMainWindow() {
 
 // ✅ 원본과 동일한 쿼리스트링 방식으로 팝업 오픈
 function openTimePopup() {
-  if (!settingsWin || settingsWin.isDestroyed()) {
-    settingsWin = new BrowserWindow({
+  if (!timeWin || timeWin.isDestroyed()) {
+    timeWin = new BrowserWindow({
       width: 420,
       height: 230,
       resizable: false,
@@ -57,17 +57,17 @@ function openTimePopup() {
         nodeIntegration: false,
       },
     });
-    settingsWin.on("closed", () => (settingsWin = null));
+    timeWin.on("closed", () => (timeWin = null));
   } else {
-    settingsWin.focus();
+    timeWin.focus();
   }
 
   if (isDev) {
-    settingsWin.loadURL(`${rootUrl}?window=settings`);
+    timeWin.loadURL(`${rootUrl}?window=times`);
   } else {
-    settingsWin.loadFile(
+    timeWin.loadFile(
       path.join(__dirname, "../../frontend/dist/index.html"),
-      { query: { window: "settings" } }
+      { query: { window: "times" } }
     );
   }
 }
