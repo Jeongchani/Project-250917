@@ -35,8 +35,8 @@ export default function TimePopup() {
   };
 
   return (
-    <div className="settings-container">
-      <div className="settings-titlebar">
+    <div className="time-container">
+      <div className="time-titlebar">
         <div className="title">근무 시간 설정</div>
         <div className="right">
           <button className="tbtn" onClick={() => window.electronAPI.minimize()}>
@@ -48,7 +48,7 @@ export default function TimePopup() {
         </div>
       </div>
 
-      <div className="settings-body">
+      <div className="time-body">
         <label>
           출근 시간
           <input
@@ -69,7 +69,7 @@ export default function TimePopup() {
         </label>
       </div>
 
-      <div className="settings-footer">
+      <div className="time-footer">
         <button className="ghost" onClick={cancel}>
           취소
         </button>

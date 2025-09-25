@@ -5,7 +5,7 @@ let mainWin = null;
 let settingsWin = null;
 let todosWin = null;
 
-// 원본 호환: "true" 또는 "1" 이면 dev로 인식 + 패키징 여부
+
 const isDev =
   process.env.ELECTRON_DEV === "true" ||
   process.env.ELECTRON_DEV === "1" ||

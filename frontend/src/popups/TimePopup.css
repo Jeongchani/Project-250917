@@ -5,7 +5,7 @@ html, body {
   height: 100%;
 }
 
-.settings-container {
+.time-container {
   display: flex;
   flex-direction: column;
   width: 420px;   /* 고정 */
@@ -16,7 +16,7 @@ html, body {
 }
 
 /* 타이틀바 */
-.settings-titlebar {
+.time-titlebar {
   flex: 0 0 28px;
   background: #333;
   display: flex;
@@ -25,7 +25,7 @@ html, body {
   padding: 0 6px;
   -webkit-app-region: drag;
 }
-.settings-titlebar .tbtn {
+.time-titlebar .tbtn {
   -webkit-app-region: no-drag;
   width: 28px;
   height: 22px;
@@ -34,21 +34,21 @@ html, body {
   color: #fff;
   cursor: pointer;
 }
-.settings-titlebar .tbtn:hover { background: #777; }
-.settings-titlebar .title { font-size: 13px; }
+.time-titlebar .tbtn:hover { background: #777; }
+.time-titlebar .title { font-size: 13px; }
 
 /* 본문 */
-.settings-body {
+.time-body {
   flex: 1 1 auto;
   padding: 12px;
   overflow-y: auto;
 }
-.settings-body label {
+.time-body label {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
-.settings-body input {
+.time-body input {
   background:#111;
   border:1px solid #555;
   color:#fff;
@@ -56,7 +56,7 @@ html, body {
 }
 
 /* 푸터 */
-.settings-footer {
+.time-footer {
   flex: 0 0 40px;
   display: flex;
   justify-content: space-between;
@@ -64,18 +64,18 @@ html, body {
   padding: 6px 12px;
   background: #2a2a2a;
 }
-.settings-footer .primary {
+.time-footer .primary {
   background:#4b7bec;
   border:none;
   color:#fff;
   padding:6px 12px;
   cursor:pointer;
 }
-.settings-footer .ghost {
+.time-footer .ghost {
   background:#444;
   border:none;
   color:#fff;
   padding:6px 12px;
   cursor:pointer;
 }
-.settings-footer button:hover { opacity: .9; }
+.time-footer button:hover { opacity: .9; }
