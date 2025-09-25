@@ -1,6 +1,6 @@
 const { ipcMain } = require("electron");
 const store = require("../store");
-const { openTimePopup } = require("../window");
+const { openPopup } = require("../window");
 const { broadcastStateUpdate } = require("./utils");
 
 function handleTime() {
@@ -22,7 +22,7 @@ function handleTime() {
   });
 
   ipcMain.handle("open-time", async () => {
-    openTimePopup();
+    openPopup("time", { width: 420, height: 230 });
     return true;
   });
 }

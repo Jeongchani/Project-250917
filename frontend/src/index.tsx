@@ -1,19 +1,20 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import './index.css';
-import App from './App';
-import TimePopup from './popups/TimePopup';
-import TodosPopup from './popups/TodosPopup';
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./index.css";
+import App from "./App";
+import TimePopup from "./popups/TimePopup";
+import TodosPopup from "./popups/TodosPopup";
 
-const params = new URLSearchParams(window.location.search);
-const w = params.get('window');
-
-const root = createRoot(document.getElementById('root')!);
+const root = createRoot(document.getElementById("root")!);
 root.render(
   <StrictMode>
-    { w === 'times' ? <TimePopup /> :
-      w === 'todos' ? <TodosPopup /> :
-      <App /> }
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/popup/time" element={<TimePopup />} />
+        <Route path="/popup/todos" element={<TodosPopup />} />
+      </Routes>
+    </BrowserRouter>
   </StrictMode>
 );
-

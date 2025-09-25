@@ -1,6 +1,5 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-// 원본과 동일: window.electronAPI 이름/메서드 시그니처 유지
 contextBridge.exposeInMainWorld("electronAPI", {
   minimize: () => ipcRenderer.send("minimize"),
   close: () => ipcRenderer.send("close"),

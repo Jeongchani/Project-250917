@@ -1,6 +1,6 @@
 const { ipcMain } = require("electron");
 const store = require("../store");
-const { openTodosPopup } = require("../window");
+const { openPopup } = require("../window");
 const { broadcastStateUpdate } = require("./utils");
 
 function handleTodos() {
@@ -31,9 +31,8 @@ function handleTodos() {
     return true;
   });
 
-  // ✅ 원본: "open-todos"
   ipcMain.handle("open-todos", async () => {
-    openTodosPopup();
+    openPopup("todos", { width: 500, height: 560, resizable: true });
     return true;
   });
 }
