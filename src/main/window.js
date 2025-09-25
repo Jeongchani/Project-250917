@@ -2,7 +2,7 @@ const { app, BrowserWindow } = require("electron");
 const path = require("path");
 
 let mainWin = null;
-let popupRefs = {}; // 팝업 창들을 이름별로 관리
+let popupRefs = {}; 
 
 const isDev =
   process.env.ELECTRON_DEV === "true" ||
@@ -39,8 +39,8 @@ function getMainWindow() {
 
 /**
  * 팝업 생성 공통 함수
- * @param {string} name - 팝업 이름 ("time", "todos")
- * @param {object} options - BrowserWindow 옵션
+ * @param {string} name 
+ * @param {object} options 
  */
 function openPopup(name, options) {
   if (!popupRefs[name] || popupRefs[name].isDestroyed()) {

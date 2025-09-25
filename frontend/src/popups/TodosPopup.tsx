@@ -3,7 +3,6 @@ import "./TodosPopup.css";
 
 type Todo = { id: number; title: string; done: boolean; due?: string };
 
-// 클라이언트에서도 정렬 함수 한 번 더
 function sortTodos(list: Todo[]): Todo[] {
   const withDue = list.filter(t => t.due);
   const withoutDue = list.filter(t => !t.due);
