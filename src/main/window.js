@@ -60,7 +60,7 @@ function openPopup(name, options) {
   }
 
   if (isDev) {
-    popupRefs[name].loadURL(`${rootUrl}/popup/${name}`);
+    popupRefs[name].loadURL(`${rootUrl}?window=${name}`);
   } else {
     popupRefs[name].loadFile(
       path.join(__dirname, "../../frontend/dist/index.html"),

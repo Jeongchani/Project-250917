@@ -1,5 +1,7 @@
 // src/main/index.js
 const { app } = require("electron");
+if (process.env.DISABLE_GPU === '1') app.disableHardwareAcceleration();
+
 const { createMainWindow } = require("./window");
 const { setupIPC } = require("./ipc");  
 const { setupUpdater } = require("./updater");

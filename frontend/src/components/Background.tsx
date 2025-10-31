@@ -26,9 +26,17 @@ export default function Background() {
       setTodos(await window.electronAPI.getTodos());
     })();
     const off = window.electronAPI.onStateUpdated(({ timeConfig, todos }) => {
-      setTimeConfig(timeConfig);
-      setTodos(todos);
-    });
+  setTimeConfig(prev => {
+    const t = (timeConfig && typeof timeConfig === 'object') ? timeConfig : prev;
+    return {
+      startHour: Number((t as any)?.startHour ?? 9),
+      startMinute: Number((t as any)?.startMinute ?? 0),
+      endHour: Number((t as any)?.endHour ?? 18),
+      endMinute: Number((t as any)?.endMinute ?? 0),
+    };
+  });
+  setTodos(Array.isArray(todos) ? todos : []);
+});
     return off;
   }, []);
 

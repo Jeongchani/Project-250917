@@ -3,7 +3,7 @@ const store = require("../store");
 
 function broadcastStateUpdate() {
   const payload = {
-    timeConfig: store.get("timeConfig") || null,
+    timeConfig: store.get("timeConfig") || { startHour: 9, startMinute: 0, endHour: 18, endMinute: 0 },
     todos: store.get("todos") || [],
   };
   BrowserWindow.getAllWindows().forEach(win => {
