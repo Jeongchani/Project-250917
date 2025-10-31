@@ -97,11 +97,15 @@ MIT License
 
 ## 버전 업데이트
 
-# 최신 반영
-git pull
+cd /d C:\Users\idgac\Projects\ToDoBar
 
-# 패치 버전 올리기 (예: 1.0.3)
+:: 1 버전 올리면서 태그 자동 생성 (예: patch)
 npm version patch -m "chore: release %s"
 
-# 태그/커밋 푸시
-git push && git push --tags
+:: 2 코드+태그 원격 푸시
+git push
+git push --tags
+
+:: 3 빌드+업로드 (세션에서 확실히 토큰 주입)
+set GH_TOKEN=%GH_TOKEN% && set GITHUB_TOKEN=%GITHUB_TOKEN% && ^
+npx electron-builder -w --publish always
