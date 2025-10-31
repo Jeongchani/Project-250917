@@ -1,6 +1,6 @@
 {
   "name": "todo-bar-app",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A simple todo bar Electron app",
   "author": "Jeongchani <",
   "main": "src/main/index.js",
